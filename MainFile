@@ -4,7 +4,9 @@ const int LIGHT_PIN_1 = 3;
 const int LIGHT_PIN_2 = 4;
 const int LIGHT_PIN_3 = 5;
 const int LIGHT_PIN_4 = 6;
+const int BUTTON_PIN = 7;
 
+bool ButtonPressed;
 
 void setup() {
   // put your setup code here, to run once:
@@ -14,13 +16,23 @@ void setup() {
   pinMode(LIGHT_PIN_2, OUTPUT);
   pinMode(LIGHT_PIN_3, OUTPUT);
   pinMode(LIGHT_PIN_4, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT);
   TurnOffAllLights();
+  ButtonPressed = false;
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  CheckButtonPressed();
+
+  if (ButtonPressed) {
+    RunLightsAndSpeaker();
+    ButtonPressed = false;
+  }
+}
+
+void RunLightsAndSpeaker() {
   TurnOffAllLights();
-  delay(3000);
   int lastPinNumber = 0;
   randomSeed(millis());
   for (int count = 1; count < 5; count++) {
@@ -40,13 +52,20 @@ void loop() {
     }
   }
   TurnOffAllLights();
-  delay(1000);
   tone(SPEAKER_PIN, 440, 100);
 }
+
 
 void TurnOffAllLights() {
   digitalWrite(LIGHT_PIN_1, LOW);
   digitalWrite(LIGHT_PIN_2, LOW);
   digitalWrite(LIGHT_PIN_3, LOW);
   digitalWrite(LIGHT_PIN_4, LOW);
+}
+
+void CheckButtonPressed() {
+  int buttonState = digitalRead(BUTTON_PIN);
+  if (buttonState == HIGH) {
+    ButtonPressed = true;
+  }
 }
