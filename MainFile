@@ -1,0 +1,52 @@
+
+const int SPEAKER_PIN = 2;
+const int LIGHT_PIN_1 = 3;
+const int LIGHT_PIN_2 = 4;
+const int LIGHT_PIN_3 = 5;
+const int LIGHT_PIN_4 = 6;
+
+
+void setup() {
+  // put your setup code here, to run once:
+
+  pinMode(SPEAKER_PIN, OUTPUT);
+  pinMode(LIGHT_PIN_1, OUTPUT);
+  pinMode(LIGHT_PIN_2, OUTPUT);
+  pinMode(LIGHT_PIN_3, OUTPUT);
+  pinMode(LIGHT_PIN_4, OUTPUT);
+  TurnOffAllLights();
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  TurnOffAllLights();
+  delay(3000);
+  int lastPinNumber = 0;
+  randomSeed(millis());
+  for (int count = 1; count < 5; count++) {
+    //zet alle lampjes en speaker uit
+    TurnOffAllLights();
+    //zet huidige lampje aan
+    int pinNumber = random(LIGHT_PIN_1, LIGHT_PIN_4 + 1);
+
+    if (pinNumber == lastPinNumber) {
+      count--;
+      continue;
+    } else {
+      lastPinNumber = pinNumber;
+      digitalWrite(pinNumber, HIGH);
+      //even wachten
+      delay(1000);
+    }
+  }
+  TurnOffAllLights();
+  delay(1000);
+  tone(SPEAKER_PIN, 440, 100);
+}
+
+void TurnOffAllLights() {
+  digitalWrite(LIGHT_PIN_1, LOW);
+  digitalWrite(LIGHT_PIN_2, LOW);
+  digitalWrite(LIGHT_PIN_3, LOW);
+  digitalWrite(LIGHT_PIN_4, LOW);
+}
