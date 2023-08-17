@@ -94,22 +94,23 @@
 
 //pins
 const int SPEAKER_PIN = 2;
-const int LIGHT_PIN_1 = 3;
-const int LIGHT_PIN_2 = 4;
-const int LIGHT_PIN_3 = 5;
-const int LIGHT_PIN_4 = 6;
+const int LIGHT_PIN_BLUE = 3;
+const int LIGHT_PIN_GREEN = 4;
+const int LIGHT_PIN_YELLOW = 5;
+const int LIGHT_PIN_RED = 6;
 const int BUTTON_PIN = 7;
 
 bool ButtonPressed;
+int LightsFlashOrder[4];
 
 void setup() {
   // put your setup code here, to run once:
 
   pinMode(SPEAKER_PIN, OUTPUT);
-  pinMode(LIGHT_PIN_1, OUTPUT);
-  pinMode(LIGHT_PIN_2, OUTPUT);
-  pinMode(LIGHT_PIN_3, OUTPUT);
-  pinMode(LIGHT_PIN_4, OUTPUT);
+  pinMode(LIGHT_PIN_BLUE, OUTPUT);
+  pinMode(LIGHT_PIN_GREEN, OUTPUT);
+  pinMode(LIGHT_PIN_YELLOW, OUTPUT);
+  pinMode(LIGHT_PIN_RED, OUTPUT);
   pinMode(BUTTON_PIN, INPUT);
   TurnOffAllLights();
   ButtonPressed = false;
@@ -133,28 +134,34 @@ void RunLightsAndSpeaker() {
     //zet alle lampjes en speaker uit
     TurnOffAllLights();
     //zet huidige lampje aan
-    int pinNumber = random(LIGHT_PIN_1, LIGHT_PIN_4 + 1);
+    int pinNumber = random(LIGHT_PIN_BLUE, LIGHT_PIN_RED + 1);
 
     if (pinNumber == lastPinNumber) {
       count--;
       continue;
     } else {
       lastPinNumber = pinNumber;
+      LightsFlashOrder[count - 1] = pinNumber;
       digitalWrite(pinNumber, HIGH);
       //even wachten
       delay(1000);
     }
   }
   TurnOffAllLights();
-  MakeHappySound();
+  if ((LightsFlashOrder[3] == LIGHT_PIN_RED) or (LightsFlashOrder[3] == LIGHT_PIN_YELLOW)) {
+      MakeHappySound();
+    }
+    else{
+      MakeSadSound();
+    }
 }
 
 
 void TurnOffAllLights() {
-  digitalWrite(LIGHT_PIN_1, LOW);
-  digitalWrite(LIGHT_PIN_2, LOW);
-  digitalWrite(LIGHT_PIN_3, LOW);
-  digitalWrite(LIGHT_PIN_4, LOW);
+  digitalWrite(LIGHT_PIN_BLUE, LOW);
+  digitalWrite(LIGHT_PIN_GREEN, LOW);
+  digitalWrite(LIGHT_PIN_YELLOW, LOW);
+  digitalWrite(LIGHT_PIN_RED, LOW);
 }
 
 void CheckButtonPressed() {
