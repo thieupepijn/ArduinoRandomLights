@@ -121,13 +121,19 @@ void loop() {
   CheckButtonPressed();
 
   if (ButtonPressed) {
-    RunLightsAndSpeaker();
+    FlashLightsInRandomOrder();
+    TurnOffAllLights();
+    if ((LightsFlashOrder[3] == LIGHT_PIN_RED) or (LightsFlashOrder[3] == LIGHT_PIN_YELLOW)) {
+      MakeHappySound();
+      FlashAllLights();
+    } else {
+      MakeSadSound();
+    }
     ButtonPressed = false;
   }
 }
 
-void RunLightsAndSpeaker() {
-  TurnOffAllLights();
+void FlashLightsInRandomOrder() {
   int lastPinNumber = 0;
   randomSeed(millis());
   for (int count = 1; count < 5; count++) {
@@ -147,21 +153,30 @@ void RunLightsAndSpeaker() {
       delay(1000);
     }
   }
-  TurnOffAllLights();
-  if ((LightsFlashOrder[3] == LIGHT_PIN_RED) or (LightsFlashOrder[3] == LIGHT_PIN_YELLOW)) {
-      MakeHappySound();
-    }
-    else{
-      MakeSadSound();
-    }
 }
 
+void FlashAllLights() {
+  for (int teller = 1; teller <4; teller++) {
+    TurnOffAllLights();
+    delay(500);
+    TurnOnAllLights();
+    delay(500);
+  }
+   TurnOffAllLights();
+}
 
 void TurnOffAllLights() {
   digitalWrite(LIGHT_PIN_BLUE, LOW);
   digitalWrite(LIGHT_PIN_GREEN, LOW);
   digitalWrite(LIGHT_PIN_YELLOW, LOW);
   digitalWrite(LIGHT_PIN_RED, LOW);
+}
+
+void TurnOnAllLights() {
+  digitalWrite(LIGHT_PIN_BLUE, HIGH);
+  digitalWrite(LIGHT_PIN_GREEN, HIGH);
+  digitalWrite(LIGHT_PIN_YELLOW, HIGH);
+  digitalWrite(LIGHT_PIN_RED, HIGH);
 }
 
 void CheckButtonPressed() {
